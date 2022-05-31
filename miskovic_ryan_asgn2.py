@@ -1,8 +1,11 @@
 import string
 import secrets
+import time
+from datetime import date
 
 # Constants for menu choices
 PASSWORD_GENERATOR = 1
+CALCULATE_PERCENTAGE = 2
 QUIT_CHOICE = 9
 
 
@@ -25,6 +28,8 @@ def main():
         #Perform users selected action.
         if choice == PASSWORD_GENERATOR:
             make_password()
+        elif choice == CALCULATE_PERCENTAGE:
+            percent_gen()
         elif choice == QUIT_CHOICE:
             print('Thank you for using the program.')
             print('Goodbye.')
@@ -33,8 +38,9 @@ def main():
 
 def display_menu():
     print('\nPlease make a selection below:\n')
-    print('MENU')
+    print('         MENU')
     print('1) Password Generator')
+    print('2) Calculate a percentage')
     print('9) Quit')
     print('~~~~~~~~~~~~~~~~~~~~~~\n')
 
@@ -55,7 +61,27 @@ def make_password():
     print('Your password is: ' + new_password)
     print('///////////////////////////////////')
 
+def percent_gen():
+    """This function generates a percent using user input.
+    
+    it asks for a numerator, denominator, and number of decimal places, 
+    then passes those inputs to percent_maker()."""
+
+    print('To generate a percent, please provide the following:')
+
+    numerator = int_input('Enter a numerator: ')
+    denominator = int_input('Enter a denominator: ')
+    precision = int_input('Enter the number of decimal places: ')
+    percent = percent_maker(numerator, denominator, precision)
+    print('/////////////////////////')
+    print('The result is:')
+    print(str(percent) + '%')
+    print('/////////////////////////')
+
+
 def yes_no_input(text):
+    """This function displays the text argument passed in
+        and checks that the response is either y or n."""
     yes_no = None
     while yes_no is None:
         yes_no = input(text)
@@ -67,6 +93,20 @@ def yes_no_input(text):
             print('Error: please enter only "y" or "n".')
 
     return yes_no
+
+def int_input(text):
+    """This function displays the text argument passed in
+    and checks that the user input is an integer."""
+    number = None
+    while number is None:
+        number = input(text)
+        try:
+            number = int(number)
+        except ValueError:
+            number = None
+            print('Error: please enter integers only.')
+    print('You entered: ' + str(number))
+    return number
 
 def password_length():
     length = None
@@ -99,5 +139,11 @@ def password_gen(length, alphabet):
     password = ''.join(secrets.choice(alphabet) for i in range(length))
     #print(password)
     return password
+
+def percent_maker(num, denom, precision):
+    ratio = num/denom
+    percent = ratio*100
+    rounded_percent = round(percent, precision)
+    return rounded_percent
 
 main()
