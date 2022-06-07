@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import webbrowser
 
 #Constants for menu
 QUIT_CHOICE = 9
@@ -84,13 +85,18 @@ def state_info(state):
 
 def state_info_img(state):
 
+    cwd = os.getcwd()
+
     flower_img = us_states[state][3]
-    print(flower_img)
+    #print(cwd)
+    #print(flower_img)
     flower_path = os.path.realpath(flower_img)
-    print(flower_path)
+    #print(flower_path)
     img = mpimg.imread(flower_path)
     state_info(state)
     plt.imshow(img)
+    #webbrowser.open(flower_path)
+    os.system(flower_path)
 
 def valid_state():
 
@@ -123,7 +129,7 @@ us_states = {
     'Illinois': ['Springfield', '12620571', 'Purple Violet', 'flowers\illinoisviolet.jpg'], 'Indiana':['Indianapolis', '6768941', 'Peony', 'flowers\peony.jpg'],
     'Iowa': ['Des Moines', '3161522', 'Wild Prairie Rose', 'flowers\wildprairierose.jpg'], 'Kansas':['Topeka', '2915269', 'Sunflower', 'flowers\sunflower.jpg'],
     'Kentucky':['Frankfort', '4474193', 'Goldenrod', 'flowers\kygoldenrod.jpg'], 'Louisiana':['Baton Rouge', '4637898', 'Magnolia', 'flowers\magnolia.jpg'],
-    'Maine':['Augusta', '1349367', 'White Pine Cone and Tassel', 'flowers\whitepinecone.jpg'], 'Maryland':['Annapolis', '6055558', 'Black-Eyed Susan', 'blackeyedsusan.jpg'],
+    'Maine':['Augusta', '1349367', 'White Pine Cone and Tassel', 'flowers\whitepinecone.jpg'], 'Maryland':['Annapolis', '6055558', 'Black-Eyed Susan', 'flowers\\blackeyedsusan.jpg'],
     'Massachusetts':['Boston', '6902371', 'Mayflower', 'flowers\mayflower.jpg'], 'Michigan':['Lansing', '9989642', 'Apple Blossom', 'flowers\miappleblossom.jpg'],
     'Minnesota':['Saint Paul', '5673015', 'Pink and White Lady Slipper', 'flowers\pinkwhiteladysslipper.jpg'], 'Mississippi':['Jackson', '2971278', 'Magnolia', 'flowers\magnolia.jpg'],
     'Missouri':['Jefferson City', '6153233', 'White Hawthorn Blossom', 'flowers\hawthornblossom.jpg'], 'Montana':['Helena', '1076891', 'Bitterroot', 'flowers\\bitterroot.jpg'],
