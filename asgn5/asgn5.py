@@ -52,22 +52,61 @@ def population_menu():
 
         if menu_choice == 1:
             col = 'Pop Apr 1'
-            limit = 250000
+            uplimit = 250000
         elif menu_choice == 2:
             col = 'Pop Jul 1'
-            limit = 250000
+            uplimit = 250000
         elif menu_choice == 3:
             pass
 
-def display_stats(dfin, col, limit):#, limit):
+def get_stats(dfin, col, uplimit, lowlimit=1):
+    """Gets column values, validates values based on input limits
+    
+    Four arguments. A dataframe and column to be worked are passed in as dfin and
+    col. The dataframe column is iterated row by row and the values in each cell are
+    compared to the upper limit and optional lower limit parameters. If a cell is
+    found with a value outside the limits, correct_cell() is called on the cell"""
     
     for index, row in dfin.iterrows():
-        if row[col] > limit:
-            print(index, row[col])
+        if row[col] > uplimit or row[col]< lowlimit:
+            #print(index, row[col])
+            correct_cell(dfin[col], row[col], uplimit, lowlimit)
+            #print(index, row[col])
+    
+    display_stats(dfin, col)
 
-def correct_cell(idx_row, cell):
-    pass
+def correct_cell(df, cell, uplimit, lowlimit):
+    print(str(cell) + ' is outside range of '+str(lowlimit)+' to '+str(uplimit))
+    new_value = cell_value(uplimit, lowlimit)
+    df.replace(cell, new_value, inplace=True)
 
+def cell_value(uplimit, lowlimit):
+    """Function verifies input is an integer between an upper and lower limit.
+
+    function asks user to input a number. If the input is not an integer and/or
+    the value is outside of "lowlimit < value < uplimit" , an error message is
+    displayed with the entry parameters and prompting the user to enter again."""
+
+    length = None
+    while length is None:
+        length = input('enter a number between '+str(lowlimit)+' and '+str(uplimit)+': ')
+        try:
+            length = int(length)
+            if length > uplimit or length < lowlimit:
+                length = None
+                print('Error: please enter a numnber in the suggested range.')
+        except ValueError:
+            length = None
+            print('Error: please enter integers only.')
+    print('You entered: ' + str(length))
+    return length
+
+def display_stats(df, col):
+    print('The column count is: '+str(len(df[col])))
+    print('The column mean is: '+str(df[col].mean()))
+    print('The standard deviation is: '+str(df[col].std()))
+    print('The column min is: '+str(df[col].min()))
+    print('The column max is: '+str(df[col].max()))
 
 def housing_menu():
 
