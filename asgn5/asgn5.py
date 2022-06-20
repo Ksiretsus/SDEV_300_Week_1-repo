@@ -11,6 +11,7 @@ POPULATION = 1
 HOUSING = 2
 
 housing = pd.read_csv('Housing.csv')
+population = pd.read_csv('PopChange.csv')
 
 def main():
     """This is the mainline program logic."""
@@ -39,12 +40,44 @@ def main():
 
 def population_menu():
 
-    print('You selected population data.')
+    population = pd.read_csv('PopChange.csv')
 
+    print('You selected population data.')
     menu_choice = 0
 
     while menu_choice != 4:
         population_display()
+
+        menu_choice = int_input('Enter your choice: ')
+
+        if menu_choice == 1:
+            col = 'Pop Apr 1'
+            limit = 250000
+        elif menu_choice == 2:
+            col = 'Pop Jul 1'
+            limit = 250000
+        elif menu_choice == 3:
+            pass
+
+def display_stats(dfin, col, limit):#, limit):
+    
+    for index, row in dfin.iterrows():
+        if row[col] > limit:
+            print(index, row[col])
+
+def correct_cell(idx_row, cell):
+    pass
+
+
+def housing_menu():
+
+    housing = pd.read_csv('Housing.csv')
+
+    print('You selected housing data.')
+    menu_choice = 0
+
+    while menu_choice != 5:
+        housing_display()
 
         menu_choice = int_input('Enter your choice: ')
 
@@ -54,10 +87,8 @@ def population_menu():
             pass
         elif menu_choice == 3:
             pass
-
-
-def housing_menu():
-    pass
+        elif menu_choice == 4:
+            pass
 
 def welcome_message():
     """Displays opening message to user."""
@@ -79,14 +110,20 @@ def display_menu():
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
 
 def population_display():
-    print('Select the column to analyze:')
+    print('\nSelect the column to analyze:')
     print('1) Population April 1st')
     print('2) Population July 1st')
     print('3) Change population')
     print('4) Go back')
 
 def housing_display():
-    pass
+    print('\nSelect the column to analyze:')
+    print('1) House age')
+    print('2) Number of bedrooms')
+    print('3) Year built')
+    print('4) Total number of rooms')
+    print('5) Go back')
+
 
 def int_input(text):
     """Function verifies user input is an integer.
@@ -108,4 +145,4 @@ def int_input(text):
     print('You entered: ' + str(number))
     return number
 
-main()
+#main()
