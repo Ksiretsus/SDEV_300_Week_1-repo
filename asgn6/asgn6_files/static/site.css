@@ -1,0 +1,25 @@
+.message{
+    font-weight: 600;
+    color: blue;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: inherit;
+    background-color: coral;
+}
+
+.navbar-brand {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.navbar-item {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.body-content {
+    padding: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif';
+}
