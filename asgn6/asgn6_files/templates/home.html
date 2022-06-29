@@ -3,5 +3,89 @@
 Home
 {% endblock %}
 {% block content %}
-<p>Home page for the Visula Studio Code Flask tutorial.</p>
+<!--The following sections are the content for display on the main page-->
+<h1>Home page for the Goldeneye 64 info site.</h1>
+    <h2>History</h2>
+        <p>Based on the 1995 movie of the same name, Goldeneye is a first-person shooter
+            that was launched in 1997. Origianlly planned to be released on the
+            Super Nintendo, the finalized Goldeneye 64 product was wildly different from its
+            initial pitch to Nintendo as a 2D platformer. The production studio Rareware
+            gave the development team a huge swathe of creative freedom and the project 
+            evolved from a 2D platformer, to an on-rails shooter like Virtua Cop, and
+            then to its final state as THE game that dragged first-person shooters from the
+            smaller Doom, Quake, and Wolfenstein community and into the mainstream.
+        </p>
+        <h3>Development</h3>
+            <p>The working vision of the team was to create a game that allowed players
+                more freedom of movement, and more interaction with the environment than
+                the previous genreation of shooters. They came up with many new ideas
+                that hadn't been implemented before on consoles such as:</p>
+                <ol>
+                    <li>Gun reloading</li>
+                    <li>Position dependent hits on enemies</li>
+                    <li>Bullet marks on walls</li>
+                    <li>Cartridge case ejections</li>
+                </ol>
+                <p>and level design that had a lot of emphasis on interesting spaces, with
+                some areas having no relevance to a level other than that of a place to
+                explore.
+
+                Probably the most important release feature of the game was its
+                multiplayer mode. Multiplayer was completely unplanned, yet it was
+                added just four months before the games release. Programmer Steve
+                Ellies sat in his office and created most of the multiplayer mode,
+                while other team members assisted after hours with Rareware and
+                Nintendo not being aware of this side project until just before release.
+                It turned out to be the part of the project that kept Goldeneye in the
+                top 10 or 20 lists even today, 25 years after its release.
+            </p>
+        <h3>Developers</h3>
+            <img src="{{ url_for('static' , filename='ge007_team_web.png')}}"/>
+            <ul>
+                <li>Martin Hollis</li>
+                <li>Dr. David Doak</li>
+                <li>Duncan Botwood</li>
+                <li>Steve Ellies</li>
+                <li>B. Jones</li>
+                <li>Mark Edmonds</li>
+                <li>Karl Hinton</li>
+                <li>Adrian Smith</li>
+            </ul>
+        <h3>Music composers</h3>
+            <ul>
+                <li>Graeme Norgate</li>
+                <li>Grant Kirkhope</li>
+                <li>Robin Beanland</li>
+            </ul>
+    <h2>Impact</h2>
+            <p>
+                Goldeney brought the first-person shooter genre to the console market.
+                Before that, FPS style games were limited to desktop computers and were
+                largely single player. One of its biggest impacts was that of multiplayer.
+                While many desktop shooters of the time had multiplayer modes, it tended
+                to be cumbersome and needed at least two computers, networking equpment,
+                two monitors, and the space for it all. In contrast the equipment for a four
+                player Goldeneye match could be carried by one person. Goldeneye also 
+                brought the genre out of the 'Shoot everything' gameplay style of Doom and
+                Quake, by introducing stealth and noise radius which rewarded players for
+                being clever and avoiding guards. A final lasting feature of the game is 
+                the zoomable sniper rifle, which had not bee seen before but is now ubiquitous
+                in the FPS genre.
+            </p>
+    <h2>Continuing Legacy:</h2>
+        <h3>Speedrunning</h3>
+            <p>Goldeneye caught the interest of the speedrunning community due to the
+                inclusion of an in game level timer. The speedrunning community is
+                large and has gotten bigger proportionally to the interent. While most
+                play the game as designed, speedrunners thrive on finding exploits
+                that allow them to shave time off of levels with some being completed in
+                unde rone minute.
+            </p>
+        <h3>Mod/Hack Community</h3>
+            <p>The modding community creates tools that they use to modify the Goldeneye
+                game code in order to create new multiplayer rule sets, modify single player
+                difficulty settings, change AI behavior, and even create new full length
+                games based on other James Bond movies, but using the Goldeneye game engine.
+                All of this content is made freely available to everyone.
+            </p>
 {% endblock %}

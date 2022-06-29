@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}
+Screenshots
+{% endblock %}
+{% block content %}
+<!--This block retrieves the images for the grid display on the links page-->
+<h1>Screenshots from Goldeneye 64.</h1>
+<div class="gallery">
+    <figure class="gallery__item gallery__item--1">
+        <img src="{{ url_for('static' , filename='Archives_Captive.png')}}" class="gallery__img" alt="Image 1">
+    </figure>
+    <figure class="gallery__item gallery__item--2">
+        <img src="{{ url_for('static' , filename='Control_Balcony.png')}}" class="gallery__img" alt="Image 2"/>
+    </figure>
+    <figure class="gallery__item gallery__item--3">
+        <img src="{{ url_for('static' , filename='Facility_Bathroom.png')}}" class="gallery__img" alt="Image 3">
+    </figure>
+    <figure class="gallery__item gallery__item--4">
+        <img src="{{ url_for('static' , filename='Frigate_Bridge.png')}}" class="gallery__img" alt="Image 4">
+    </figure>
+    <figure class="gallery__item gallery__item--5">
+        <img src="{{ url_for('static' , filename='Missile_Silo.png')}}" class="gallery__img" alt="Image 5">
+    </figure>
+    <figure class="gallery__item gallery__item--6">
+        <img src="{{ url_for('static' , filename='Streets_Tank.png')}}" class="gallery__img" alt="Image 6">
+    </figure>
+</div>
+{% endblock %}

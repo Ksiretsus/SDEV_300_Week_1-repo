@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!--This is the title block for the page template-->
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='site.css')}}" />
     </head>
 
     <body>
+        <!--These are the options that show up in the menu-->
         <div class="navbar">
             <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
-            <a href="{{ url_for('about') }}" class="navbar-item">About</a>
-            <a href="{{ url_for('contact') }}" class="navbar-item">Contact</a>
+            <a href="{{ url_for('screenshots') }}" class="navbar-item">Screenshots</a>
+            <a href="{{ url_for('links') }}" class="navbar-item">Links</a>
         </div>
 
+        <!--This section is for the body of the page-->
         <div class="body-content">
             {% block content %}
             {% endblock %}
             <hr/>
             <footer>
-                <p>2022</p>
+                <p>Welcome, the current time is: {{ date }}</p>
             </footer>
         </div>
     </body>
