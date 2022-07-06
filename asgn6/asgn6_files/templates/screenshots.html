@@ -3,6 +3,13 @@
 Screenshots
 {% endblock %}
 {% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 <!--This block retrieves the images for the grid display on the links page-->
 <h1>Screenshots from Goldeneye 64.</h1>
 <div class="gallery">

@@ -3,6 +3,13 @@
 Home
 {% endblock %}
 {% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 <!--The following sections are the content for display on the main page-->
 <h1>Home page for the Goldeneye 64 info site.</h1>
     <h2>History</h2>
@@ -69,7 +76,7 @@ Home
                 brought the genre out of the 'Shoot everything' gameplay style of Doom and
                 Quake, by introducing stealth and noise radius which rewarded players for
                 being clever and avoiding guards. A final lasting feature of the game is 
-                the zoomable sniper rifle, which had not bee seen before but is now ubiquitous
+                the zoomable sniper rifle, which had not been seen before but is now ubiquitous
                 in the FPS genre.
             </p>
     <h2>Continuing Legacy:</h2>
@@ -79,7 +86,7 @@ Home
                 large and has gotten bigger proportionally to the interent. While most
                 play the game as designed, speedrunners thrive on finding exploits
                 that allow them to shave time off of levels with some being completed in
-                unde rone minute.
+                under one minute.
             </p>
         <h3>Mod/Hack Community</h3>
             <p>The modding community creates tools that they use to modify the Goldeneye

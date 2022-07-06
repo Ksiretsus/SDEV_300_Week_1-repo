@@ -3,6 +3,13 @@
 Goldeneye Links
 {% endblock %}
 {% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 <h1>Links to other Goldeneye sites:</h1>
 <!--The following sections are links to outside resources with descriptions-->
     <h2><a href="https://www.the-elite.net/">The Elite.Net</a></h2>

@@ -26,27 +26,19 @@
     background-attachment: fixed;
 }
 
+.login {
+    color: aliceblue;
+}
+
 p {
     color:aliceblue;
 }
 
-h1 {
+h1, h2, h3 {
     color: gold;
 }
 
-h2 {
-    color: gold;
-}
-
-h3 {
-    color: gold;
-}
-
-ol {
-    color: aliceblue;
-}
-
-ul {
+ol, ul {
     color: aliceblue;
 }
 
