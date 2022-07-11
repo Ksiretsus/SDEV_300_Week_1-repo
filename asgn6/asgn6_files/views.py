@@ -3,12 +3,13 @@
 from datetime import datetime
 
 from flask import Flask, render_template, session, url_for, redirect, request, flash
-
+from passlib.hash import sha256_crypt
+import pandas as pd
 from . import app
 
-from passlib.hash import sha256_crypt
+
 app.secret_key = "hello"
-passfile = 'passfile.txt'
+PASSFILE = 'passfile.txt'
 
 @app.route("/")
 def welcome():
@@ -30,37 +31,43 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        check = check_creds(passfile, username, password)
+        check = check_creds(PASSFILE, username, password)
         if check is True:
             session["user"] = username
             return redirect(url_for("home"))
-        else:
-            flash("Username and/or password is incorrect", "warning")
-            return render_template(
-            "login.html",
-            date=datetime.now()
+
+        flash("Username and/or password is incorrect", "warning")
+        return render_template(
+        "login.html",
+        date=datetime.now()
         )
 
-    else:
-        if "user" in session:
-            return redirect(url_for("home"))
-        return render_template(
-            "login.html",
-            date=datetime.now()
-        )
+
+    if "user" in session:
+        return redirect(url_for("home"))
+    return render_template(
+        "login.html",
+        date=datetime.now()
+    )
 
 @app.route("/user")
 def user():
+    """This function serves the user page.
+
+    it renders blank html page with username"""
     if "user" in session:
-        user = session["user"]
-        return f"<h1>{user}</h1>"
-    else:
-        return redirect(url_for("login"))
+        username = session["user"]
+        return f"<h1>{username}</h1>"
+
+    return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
+    """This function serves the logout page.
+
+    it ends the users session and deletes data"""
     if "user" in session:
-        user = session["user"]
+        #user = session["user"]
         flash("Log out successful.", "info")
     session.pop("user", None)
     return redirect(url_for("login"))
@@ -75,12 +82,12 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         password2 = request.form.get("password2")
-        available = check_available(passfile, username)
+        available = check_available(PASSFILE, username)
         match = pw_match(password, password2)
         if available is True:
             if match is True:
                 flash("Account created! You can now log in.", "info")
-                add_user(passfile, username, password)
+                add_user(PASSFILE, username, password)
             else:
                 flash("Passwords don't match", "info")
                 return render_template(
@@ -110,9 +117,9 @@ def home():
             #time to the calling page
             date=datetime.now()
             )
-    else:
-        flash("You must log in to view this page.", "info")
-        return redirect(url_for("login"))
+
+    flash("You must log in to view this page.", "info")
+    return redirect(url_for("login"))
 
 @app.route("/screenshots/")
 def screenshots():
@@ -124,9 +131,9 @@ def screenshots():
             "screenshots.html",
             date=datetime.now()
             )
-    else:
-        flash("You must log in to view this page.", "info")
-        return redirect(url_for("login"))
+
+    flash("You must log in to view this page.", "info")
+    return redirect(url_for("login"))
 
 @app.route("/links/")
 def links():
@@ -138,10 +145,30 @@ def links():
             "links.html",
             date=datetime.now()
             )
-    else:
-        flash("You must log in to view this page.", "info")
-        return redirect(url_for("login"))
 
+    flash("You must log in to view this page.", "info")
+    return redirect(url_for("login"))
+
+@app.route("/table")
+def table():
+    """this function serves the table page.
+
+    it calls renter_template on table.html"""
+
+    datafr = pd.read_csv("table_data.csv")
+    datafr.to_csv("table_data.csv", index=None)
+    data = pd.read_csv("table_data.csv")
+
+    if "user" in session:
+        return render_template(
+            "table.html",
+            tables=[data.to_html()],
+            titles = [''],
+            date=datetime.now()
+            )
+
+    flash("You must log in to view this page.", "info")
+    return redirect(url_for("login"))
 
 def readfile(file):
     """This function reads the password file.
@@ -150,8 +177,8 @@ def readfile(file):
     into a dictionary of key value pairs"""
 
     pass_dict={}
-    with open(file) as f:
-        for line in f:
+    with open(file) as data_file:
+        for line in data_file:
             (key, val) = line.split(',')
             pass_dict[key]=val.strip('\n')
         return pass_dict
@@ -169,8 +196,8 @@ def check_creds(file, username, password):
         test_pass = password
         sav_pass = pass_dict[username]
         return sha256_crypt.verify(test_pass, sav_pass)
-    else:
-        return None
+
+    return None
 
 def check_available(file, username):
     """This function checks username availability
@@ -179,15 +206,17 @@ def check_available(file, username):
     pass_dict = readfile(file)
     if username not in pass_dict:
         return True
+    return False
 
-def pw_match(pw, pw2):
+def pw_match(pass_w, pass_w2):
     """This function validates register password
 
-    Fuction compares the two user supplied passwords from the 
+    Fuction compares the two user supplied passwords from the
     register form."""
 
-    if pw == pw2:
+    if pass_w == pass_w2:
         return True
+    return False
 
 def add_user(file, username, password):
     """This function adds a user
@@ -196,5 +225,5 @@ def add_user(file, username, password):
     and adds the username and password hash to the pw file."""
 
     hash_pass = sha256_crypt.hash(password)
-    with open(file, "a") as f:
-        f.writelines(f"{username},{hash_pass}\n")
+    with open(file, "a") as data_file:
+        data_file.writelines(f"{username},{hash_pass}\n")

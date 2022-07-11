@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}
+Table
+{% endblock %}
+{% block content %}
+<h1 align="center">Weapons table</h1>
+<h2 align="center">Below is a table showing some of the common weapons in game:</h2>
+    <div align="center">
+        <table>
+            <h1>
+                {% for table in tables %}
+                <h2>{{titles[loop.index]}}</h2>
+                {{table | safe}}
+
+                {% endfor %}
+            </h1>
+        </table>
+    </div>
+{% endblock %}
