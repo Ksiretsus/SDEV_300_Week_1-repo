@@ -10,6 +10,7 @@ from . import app
 
 app.secret_key = "hello"
 PASSFILE = 'passfile.txt'
+BLACKLIST = 'common_password.txt'
 
 @app.route("/")
 def welcome():
@@ -77,14 +78,14 @@ def logout():
 def register():
     """This function serves the register page.
 
-    it calls renter_template on register.html"""
+    it calls render_template on register.html"""
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
         password2 = request.form.get("password2")
-        available = check_available(PASSFILE, username)
+        name_taken = check_user(PASSFILE, username)
         match = pw_match(password, password2)
-        if available is True:
+        if name_taken is False:
             if match is True:
                 flash("Account created! You can now log in.", "info")
                 add_user(PASSFILE, username, password)
@@ -102,6 +103,47 @@ def register():
             )
     return render_template(
         "register.html",
+        date=datetime.now()
+        )
+
+@app.route("/update_login", methods=["POST", "GET"])
+def update_login():
+    """This function serves the register page.
+
+    it calls render_template on register.html"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        password2 = request.form.get("password2")
+        user_exist = check_user(PASSFILE, username)
+
+        if user_exist is True:
+            match = pw_match(password, password2)
+            if match is True:
+                b_listed = pw_blist(BLACKLIST, password)
+                if b_listed is False:
+                    flash("Password updated! You can now log in.", "info")
+                    update_user(PASSFILE, username, password)
+                else:
+                    flash("Password not allowed, choose another.")
+                    return render_template(
+                    "update_login.html",
+                    date=datetime.now()
+                )
+            else:
+                flash("Passwords don't match", "info")
+                return render_template(
+                    "update_login.html",
+                    date=datetime.now()
+                )
+        else:
+            flash("User account doesn't exist", "info")
+            return render_template(
+                "update_login.html",
+                date=datetime.now()
+            )
+    return render_template(
+        "update_login.html",
         date=datetime.now()
         )
 
@@ -199,10 +241,18 @@ def check_creds(file, username, password):
 
     return None
 
-def check_available(file, username):
-    """This function checks username availability
+def check_user(file, username):
+    """Function checks if user account exists"""
 
-    """
+    pass_dict = readfile(file)
+    if username in pass_dict:
+        return True
+    return False
+
+
+def check_available(file, username):
+    """This function checks username availability"""
+
     pass_dict = readfile(file)
     if username not in pass_dict:
         return True
@@ -218,6 +268,19 @@ def pw_match(pass_w, pass_w2):
         return True
     return False
 
+def pw_blist(file, password):
+    """This function checks passwords against a blacklist."""
+
+    blacklist=[]
+    with open(file) as data_file:
+        for line in data_file:
+            blacklist.append(line.strip("\n"))
+    
+    print(blacklist)
+    if password in blacklist:
+        return True
+    return False
+
 def add_user(file, username, password):
     """This function adds a user
 
@@ -227,3 +290,14 @@ def add_user(file, username, password):
     hash_pass = sha256_crypt.hash(password)
     with open(file, "a") as data_file:
         data_file.writelines(f"{username},{hash_pass}\n")
+
+def update_user(file, username, password):
+    """Updates a users password in the PASSFILE"""
+
+    pass_dict = readfile(file)
+    hash_pass = sha256_crypt.hash(password)
+    pass_dict[username]=hash_pass
+
+    with open(file, 'w') as data_file:
+        for key, value in pass_dict.items():
+            data_file.writelines(f"{key},{value}\n")
