@@ -1,7 +1,7 @@
 """This is the main app for URL routing and page rendering."""
 
 from datetime import datetime
-
+import logging
 from flask import Flask, render_template, session, url_for, redirect, request, flash
 from passlib.hash import sha256_crypt
 import pandas as pd
@@ -11,6 +11,14 @@ from . import app
 app.secret_key = "hello"
 PASSFILE = 'passfile.txt'
 BLACKLIST = 'common_password.txt'
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(levelname)s:%(message)s:%(asctime)s')
+file_handler = logging.FileHandler('failed_logins.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
 
 @app.route("/")
 def welcome():
@@ -28,8 +36,12 @@ def welcome():
 def login():
     """This function serves the login page.
 
-    it calls renter_template on login.html"""
+    it calls renter_template on login.html. The function takes a username
+    and a password, verifies both, and if successful it redirects the user
+    to the home page."""
+
     if request.method == "POST":
+        requester_ip = request.remote_addr
         username = request.form.get("username")
         password = request.form.get("password")
         check = check_creds(PASSFILE, username, password)
@@ -37,7 +49,10 @@ def login():
             session["user"] = username
             return redirect(url_for("home"))
 
+        #if the login attempt fails, this code logs the attempt
+        #then notifies the user of the failure.
         flash("Username and/or password is incorrect", "warning")
+        logger.info('Failed login attempt. Requester IP: %s', requester_ip)
         return render_template(
         "login.html",
         date=datetime.now()
@@ -55,7 +70,9 @@ def login():
 def user():
     """This function serves the user page.
 
-    it renders blank html page with username"""
+    it renders blank html page with username. This function is used
+    only for testing purposes. It is not accessible to users."""
+
     if "user" in session:
         username = session["user"]
         return f"<h1>{username}</h1>"
@@ -66,7 +83,7 @@ def user():
 def logout():
     """This function serves the logout page.
 
-    it ends the users session and deletes data"""
+    it ends the users session and deletes session data."""
     if "user" in session:
         #user = session["user"]
         flash("Log out successful.", "info")
@@ -78,7 +95,11 @@ def logout():
 def register():
     """This function serves the register page.
 
-    it calls render_template on register.html"""
+    it calls render_template on register.html. It can take a username and
+    two passwords from the user. It checks availability of the username,
+    then it compares both passwords for a match. If it fails the register
+    page is refreshed with a message informing of the failed register."""
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -108,9 +129,17 @@ def register():
 
 @app.route("/update_login", methods=["POST", "GET"])
 def update_login():
-    """This function serves the register page.
+    """This function serves the update login page.
 
-    it calls render_template on register.html"""
+    it calls render_template on register.html. The funciton takes a
+    username and two passwords. It verifes that the user exists in the
+    system, then it performs checks of the password. It checks that
+    both passwords meet character requirements, that they match, finally
+    that the password is not black listed. If all three tests are passed
+    the passfile.txt is updated with the new info and the user is
+    notified that the change was successful. If not, the failed attempt
+    is logged and the user is notifed of the reason and to try again."""
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -219,7 +248,7 @@ def readfile(file):
     into a dictionary of key value pairs"""
 
     pass_dict={}
-    with open(file) as data_file:
+    with open(file, encoding="utf8") as data_file:
         for line in data_file:
             (key, val) = line.split(',')
             pass_dict[key]=val.strip('\n')
@@ -272,10 +301,10 @@ def pw_blist(file, password):
     """This function checks passwords against a blacklist."""
 
     blacklist=[]
-    with open(file) as data_file:
+    with open(file, encoding="utf8") as data_file:
         for line in data_file:
             blacklist.append(line.strip("\n"))
-    
+
     print(blacklist)
     if password in blacklist:
         return True
@@ -288,7 +317,7 @@ def add_user(file, username, password):
     and adds the username and password hash to the pw file."""
 
     hash_pass = sha256_crypt.hash(password)
-    with open(file, "a") as data_file:
+    with open(file, "a", encoding="utf8") as data_file:
         data_file.writelines(f"{username},{hash_pass}\n")
 
 def update_user(file, username, password):
@@ -298,6 +327,6 @@ def update_user(file, username, password):
     hash_pass = sha256_crypt.hash(password)
     pass_dict[username]=hash_pass
 
-    with open(file, 'w') as data_file:
+    with open(file, 'w', encoding="utf8") as data_file:
         for key, value in pass_dict.items():
             data_file.writelines(f"{key},{value}\n")
